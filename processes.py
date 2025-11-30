@@ -8,9 +8,15 @@ def get_current_process():
     return processes[current_index]
 
 def save_context():
-    p = get_current_process
-    p["pc"]+=1
-    p["acc"]+=1
+    # get the current process object (call the accessor)
+    p = get_current_process()
+    # defensive: ensure p is a mapping before updating
+    if isinstance(p, dict):
+        p["pc"] += 1
+        p["acc"] += 1
+    else:
+        # unexpected type - raise a clear error to make debugging easier
+        raise TypeError(f"Expected current process to be a dict, got {type(p)!r}")
 
 def switch_process():
     global current_index
