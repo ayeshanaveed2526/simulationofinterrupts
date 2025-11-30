@@ -27,10 +27,30 @@ def update_process_table():
         )
 
 
-def start_gui_loop(update_func):
+def start_gui_loop(update_func, keyboard_callback=None):
+    """Start the GUI update loop.
+
+    If keyboard_callback is provided it will be called whenever the user presses
+    any key while the GUI window is focused. The callback should be a callable
+    that takes no arguments (for example: ``lambda: raise_interrupt(1)``).
+    """
+
     def loop():
         update_func()
         root.after(1000, loop)
+
+    def _on_key(event):
+        if keyboard_callback is None:
+            return
+        try:
+            # Call the provided callback for any key press.
+            keyboard_callback()
+        except Exception:
+            # Swallow exceptions from user callback to keep GUI running.
+            pass
+
+    if keyboard_callback is not None:
+        root.bind('<Key>', _on_key)
 
     loop()
     root.mainloop()
