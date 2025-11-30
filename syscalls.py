@@ -1,5 +1,8 @@
+
+
 from gui import update_gui_log
 from scheduler import run_scheduler
+
 def sys_write(text):
     update_gui_log(f"[SYSCALL WRITE] {text}")
 
